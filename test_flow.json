@@ -1,0 +1,65 @@
+{
+    "ProjectName": "TestProject",
+    "Api": [
+        {
+            "module": "admin",
+            "business": [
+                {
+                    "name": "user",
+                    "operate": [
+                        {
+                            "name": "list",
+                            "method": "GET",
+                            "remark": "获取用户列表"
+                        },
+                        {
+                            "name": "add",
+                            "method": "POST",
+                            "remark": "添加用户"
+                        },
+                        {
+                            "name": "edit",
+                            "method": "PUT",
+                            "remark": "编辑用户"
+                        },
+                        {
+                            "name": "del",
+                            "method": "DELETE",
+                            "remark": "删除用户"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "module": "app",
+            "business": [
+                {
+                    "name": "order",
+                    "operate": [
+                        {
+                            "name": "list",
+                            "method": "GET",
+                            "remark": "获取订单列表"
+                        },
+                        {
+                            "name": "add",
+                            "method": "POST",
+                            "remark": "添加订单"
+                        },
+                        {
+                            "name": "edit",
+                            "method": "PUT",
+                            "remark": "编辑订单"
+                        },
+                        {
+                            "name": "del",
+                            "method": "DELETE",
+                            "remark": "删除订单"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
