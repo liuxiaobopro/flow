@@ -3,6 +3,7 @@ package api
 type Operation struct {
 	Name   string `json:"name"`
 	Method string `json:"method"`
+	Rg     string `json:"rg"`
 	Remark string `json:"remark"`
 }
 

@@ -1,5 +1,5 @@
 {
-    "ProjectName": "TestProject",
+    "ProjectName": "github.com/liuxiaobopro/flow",
     "OutPath": {
         "handle": "handle/",
         "router": "router/",
@@ -15,21 +15,25 @@
                         {
                             "name": "list",
                             "method": "GET",
+                            "rg": "admin",
                             "remark": "获取用户列表"
                         },
                         {
                             "name": "add",
                             "method": "POST",
+                            "rg": "admin",
                             "remark": "添加用户"
                         },
                         {
                             "name": "edit",
                             "method": "PUT",
+                            "rg": "admin",
                             "remark": "编辑用户"
                         },
                         {
                             "name": "del",
                             "method": "DELETE",
+                            "rg": "admin",
                             "remark": "删除用户"
                         }
                     ]
@@ -45,21 +49,25 @@
                         {
                             "name": "list",
                             "method": "GET",
+                            "rg": "app",
                             "remark": "获取订单列表"
                         },
                         {
                             "name": "add",
                             "method": "POST",
+                            "rg": "app",
                             "remark": "添加订单"
                         },
                         {
                             "name": "edit",
                             "method": "PUT",
+                            "rg": "app",
                             "remark": "编辑订单"
                         },
                         {
                             "name": "del",
                             "method": "DELETE",
+                            "rg": "app",
                             "remark": "删除订单"
                         }
                     ]
