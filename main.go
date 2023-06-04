@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/liuxiaobopro/flow/api"
 
@@ -30,6 +31,7 @@ func main() {
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			file := args[0]
+			file = strings.Trim(file, " ")
 			// 输出交互警告, 防止误操作(此操作有风险, 默认n(y/n))
 			fmt.Printf("This operation is risky, are you sure you want to continue? [y/n]: ")
 			var input string

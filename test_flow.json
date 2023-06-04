@@ -1,5 +1,10 @@
 {
     "ProjectName": "TestProject",
+    "OutPath": {
+        "handle": "handle/",
+        "router": "router/",
+        "middleware": "middleware/"
+    },
     "Api": [
         {
             "module": "admin",
@@ -60,6 +65,20 @@
                     ]
                 }
             ]
+        }
+    ],
+    "RouterGroup": [
+        {
+            "name": "default",
+            "middleware": ""
+        },
+        {
+            "name": "admin",
+            "middleware": "Trace(),Cors()"
+        },
+        {
+            "name": "app",
+            "middleware": "Print(logger *logx.Gin)"
         }
     ]
 }
