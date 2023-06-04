@@ -30,6 +30,14 @@ func main() {
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			file := args[0]
+			// 输出交互警告, 防止误操作(此操作有风险, 默认n(y/n))
+			fmt.Printf("This operation is risky, are you sure you want to continue? [y/n]: ")
+			var input string
+			fmt.Scanln(&input)
+			if input != "y" && input != "Y" {
+				fmt.Println("Operation canceled.")
+				os.Exit(1)
+			}
 			// 判断文件是否存在
 			if _, err := os.Stat(file); os.IsNotExist(err) {
 				fmt.Println("File does not exist.")
