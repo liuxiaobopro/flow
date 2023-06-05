@@ -40,16 +40,6 @@ func Run(config *Config) {
 
 // format 格式化
 func format() {
-	// 判断router文件夹是否存在
-	if _, err := os.Stat(routerPath); os.IsNotExist(err) {
-		// 创建文件夹
-		err := os.MkdirAll(routerPath, os.ModePerm)
-		if err != nil {
-			fmt.Println("Create folder failed.")
-			os.Exit(1)
-		}
-	}
-
 	for _, v := range conf.API {
 		for _, v1 := range v.Business {
 			for _, v2 := range v1.Operate {
