@@ -8,9 +8,7 @@ FlowFrame框架的辅助工具
 {
     "ProjectName": "TestProject", // 项目名称
     "OutPath": { // 生成文件输出路径(必须以/结尾并且是一个单词)
-        "handle": "handle/",
-        "router": "router/",
-        "middleware": "middleware/"
+        "handle": "handle/"
     },
     "Api": [ // 接口
         {
@@ -72,20 +70,6 @@ FlowFrame框架的辅助工具
                     ]
                 }
             ]
-        }
-    ],
-    "RouterGroup": [ // 路由组
-        {
-            "name": "default", // 路由组名称
-            "middleware": "" // 中间件(逗号分隔)
-        },
-        {
-            "name": "admin",
-            "middleware": "Trace(),Cors()"
-        },
-        {
-            "name": "app",
-            "middleware": "Print(logger *logx.Gin)"
         }
     ]
 }
