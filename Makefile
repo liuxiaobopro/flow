@@ -1,4 +1,4 @@
-BIN_FILE=qsgo
+BIN_FILE=flow
 BIN_DIR=.
 BIN_PATH=$(BIN_DIR)/$(BIN_FILE)
 
