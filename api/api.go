@@ -12,7 +12,6 @@ import (
 var (
 	conf       *Config
 	handlePath string
-	routerPath string
 )
 
 type (
@@ -64,8 +63,8 @@ func format() {
 					DaoFilename:  "dao.go",
 
 					BaseStructName:  firstUpBusinessName + firstUpOperateName,
-					ReqStructName:   v1.Name + firstUpOperateName + "Req",
-					ReplyStructName: v1.Name + firstUpOperateName + "Reply",
+					ReqStructName:   v1.Name + firstUpOperateName,
+					ReplyStructName: v1.Name + firstUpOperateName,
 				}
 
 				genHandleFile(handle)
