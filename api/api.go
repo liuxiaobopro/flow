@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"os"
-	"strings"
 	"text/template"
 
 	stringx "github.com/liuxiaobopro/gobox/string"
@@ -27,33 +26,10 @@ type (
 		ReqStructName   string // 请求结构体名
 		ReplyStructName string // 响应结构体名
 	}
-
-	routerFileInfo struct {
-		ProjectName string            // 项目名
-		Packname    string            // 包名
-		GroupName   string            // 组名
-		FuncName    string            // 函数名
-		Routers     []*routerTempInfo // 路由
-	}
-
-	routerTempInfo struct {
-		ProjectName string // 项目名
-		Method      string // 方法
-		Path        string // 路径
-		Router      string // 路由
-		HandlerName string // 处理函数
-		Remark      string // 备注
-	}
-
-	routerVars struct {
-		GroupName string            // 名称
-		routers   []*routerTempInfo // 路由
-	}
 )
 
 func initConfig() {
 	handlePath = conf.OutPath.Handle
-	routerPath = conf.OutPath.Router
 }
 
 func Run(config *Config) {
@@ -64,8 +40,6 @@ func Run(config *Config) {
 
 // format 格式化
 func format() {
-	var routerGroup = make(map[string]*routerVars)
-
 	// 判断router文件夹是否存在
 	if _, err := os.Stat(routerPath); os.IsNotExist(err) {
 		// 创建文件夹
@@ -73,15 +47,6 @@ func format() {
 		if err != nil {
 			fmt.Println("Create folder failed.")
 			os.Exit(1)
-		}
-	}
-
-	if len(conf.RouterGroup) > 0 {
-		for _, v := range conf.RouterGroup {
-			routerGroup[v.Name] = &routerVars{
-				GroupName: v.Name,
-				routers:   []*routerTempInfo{},
-			}
 		}
 	}
 
@@ -99,7 +64,6 @@ func format() {
 					}
 				}
 
-				//#region handle
 				firstUpOperateName := stringx.FirstUp(v2.Name)
 				firstUpBusinessName := stringx.FirstUp(v1.Name)
 
@@ -115,92 +79,8 @@ func format() {
 				}
 
 				genHandleFile(handle)
-				//#endregion
-
-				//#region router
-				if v2.Rg != "" {
-					routerDetail, ok := routerGroup[v2.Rg]
-					if !ok {
-						// 路由不存在, 已经跳过
-						fmt.Println("router not exist, skip")
-					} else {
-						routerDetail.routers = append(routerDetail.routers, &routerTempInfo{
-							ProjectName: conf.ProjectName,
-							Method:      v2.Method,
-							Path:        fmt.Sprintf("%s%s/%s/%s", conf.OutPath.Handle, v.Module, v1.Name, v2.Name),
-							Router:      fmt.Sprintf("/%s/%s", v1.Name, v2.Name),
-							HandlerName: handle.Packname + "." + handle.BaseStructName,
-							Remark:      v2.Remark,
-						})
-					}
-				}
-				//#endregion
 			}
 		}
-	}
-
-	if len(conf.RouterGroup) > 0 {
-		for _, v := range routerGroup {
-			if len(v.routers) == 0 {
-				continue
-			}
-			genRouterFile(&routerFileInfo{
-				ProjectName: conf.ProjectName,
-				Packname:    strings.TrimRight(conf.OutPath.Router, "/"),
-				GroupName:   v.GroupName,
-				FuncName:    stringx.FirstUp(v.GroupName),
-				Routers:     v.routers,
-			})
-		}
-	}
-}
-
-// genRouterFile 生成router文件
-func genRouterFile(r *routerFileInfo) {
-	// 判断文件是否存在
-	filePath := fmt.Sprintf("%s/%s.go", routerPath, r.GroupName)
-
-	var err error
-	if _, err = os.Stat(filePath); err == nil {
-		// 文件存在, 删除文件
-		err1 := os.Remove(filePath)
-		if err1 != nil {
-			fmt.Println("Remove file failed.")
-			os.Exit(1)
-		}
-	} else if !os.IsNotExist(err) {
-		fmt.Println("Stat file failed.")
-		os.Exit(1)
-	}
-
-	// 创建文件
-	file, err := os.Create(filePath)
-	if err != nil {
-		fmt.Println("Create file failed.")
-		os.Exit(1)
-	}
-	defer file.Close()
-
-	// 写入文件
-	// 创建模板对象
-	tmpl, err := template.New("routerFile").Parse(routerFileContent())
-	if err != nil {
-		fmt.Println("Error creating template:", err)
-		os.Exit(1)
-	}
-
-	// 渲染模板并保存结果到字符串变量
-	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, r)
-	if err != nil {
-		fmt.Println("Error rendering template:", err)
-		os.Exit(1)
-	}
-
-	_, err = file.WriteString(buf.String())
-	if err != nil {
-		fmt.Println("Write file failed.")
-		os.Exit(1)
 	}
 }
 
@@ -260,24 +140,6 @@ func genHandleFile(f *handleFileInfo) {
 	}
 }
 
-// routerFileContent router文件内容
-func routerFileContent() string {
-	return `package {{.Packname}}
-
-import (
-	"github.com/gin-gonic/gin"
-	{{range .Routers}}
-	"{{.ProjectName}}/{{.Path}}" {{end}}
-
-	"github.com/liuxiaobopro/gobox/gin/ctx"
-)
-
-func Add{{.FuncName}}(rg *gin.RouterGroup) {
-	{{range .Routers}}
-	rg.Handle("{{.Method}}", "{{.Router}}", ctx.Use(new({{.HandlerName}}Flow))) // {{.Remark}} {{end}}
-}`
-}
-
 // baseFileHandleContent 基础文件内容
 func baseFileHandleContent() string {
 	return `package {{.Packname}}
@@ -297,23 +159,24 @@ type {{.ReqStructName }}Req struct {
 type {{.ReplyStructName }}Reply struct {
 }
 
-func (d *{{.BaseStructName }}Flow) FlowHandle() {
+func (d *{{.BaseStructName }}Flow) FlowHandle() *replyx.T {
 	var req {{.ReqStructName }}Req
 	if err := d.ShouldBind(&req); err != nil {
-		d.ReturnJson(replyx.ParamErrT)
-		return
+		return replyx.ParamErrT
 	}
 
 	d.SetReq(&req)
+	return nil
 }
 
-func (d *{{.BaseStructName }}Flow) FlowValidate() {}
+func (d *{{.BaseStructName }}Flow) FlowValidate() *replyx.T {
+	return nil
+}
 
-func (d *{{.BaseStructName }}Flow) FlowLogic() {
+func (d *{{.BaseStructName }}Flow) FlowLogic() *replyx.T {
 	req, ok := d.GetReq().(*{{.ReqStructName }}Req)
 	if !ok {
-		d.ReturnJson(replyx.InternalErrT)
-		return
+		return replyx.InternalErrT
 	}
 	var (
 		out = &{{.ReplyStructName }}Reply{}
@@ -322,5 +185,6 @@ func (d *{{.BaseStructName }}Flow) FlowLogic() {
 	_ = req
 
 	d.ReturnSucc(out)
+	return nil
 }`
 }

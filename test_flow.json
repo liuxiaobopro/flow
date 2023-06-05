@@ -1,9 +1,7 @@
 {
     "ProjectName": "github.com/liuxiaobopro/flow",
     "OutPath": {
-        "handle": "handle/",
-        "router": "router/",
-        "middleware": "middleware/"
+        "handle": "handle/"
     },
     "Api": [
         {
@@ -73,20 +71,6 @@
                     ]
                 }
             ]
-        }
-    ],
-    "RouterGroup": [
-        {
-            "name": "default",
-            "middleware": ""
-        },
-        {
-            "name": "admin",
-            "middleware": "Trace(),Cors()"
-        },
-        {
-            "name": "app",
-            "middleware": "Print(logger *logx.Gin)"
         }
     ]
 }

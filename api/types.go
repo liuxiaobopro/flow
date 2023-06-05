@@ -17,18 +17,10 @@ type Module struct {
 	Business []Business `json:"business"`
 }
 
-type RouterGroup struct {
-	Name       string `json:"name"`
-	Middleware string `json:"middleware"`
-}
-
 type Config struct {
 	ProjectName string `json:"ProjectName"`
 	OutPath     struct {
-		Handle     string `json:"handle"`
-		Router     string `json:"router"`
-		Middleware string `json:"middleware"`
+		Handle string `json:"handle"`
 	} `json:"OutPath"`
-	API         []Module      `json:"Api"`
-	RouterGroup []RouterGroup `json:"RouterGroup"`
+	API []Module `json:"Api"`
 }
